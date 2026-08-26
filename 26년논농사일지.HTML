@@ -1,0 +1,1061 @@
+<title>26년 논농사 일지</title>
+<style>
+  :root{
+    --ink:#1F2A1A;
+    --ink-soft:#4B5A43;
+    --ink-faint:#7C8873;
+    --paper:#EDEFE3;
+    --paper-raised:#F8F9F1;
+    --paper-sunken:#E2E5D6;
+    --line: rgba(31,42,26,0.14);
+    --line-soft: rgba(31,42,26,0.08);
+    --accent:#B9863A;
+    --accent-strong:#96692A;
+    --accent-ink:#3A2708;
+    --accent-tint: rgba(185,134,58,0.14);
+    --shadow: 0 10px 28px rgba(31,42,26,0.12);
+    --shadow-sm: 0 2px 8px rgba(31,42,26,0.08);
+    --radius: 12px;
+    --radius-sm: 8px;
+    --serif: "Noto Serif KR","Nanum Myeongjo","Batang","AppleMyungjo",serif;
+    --sans: "Pretendard","Apple SD Gothic Neo","Malgun Gothic","Segoe UI",sans-serif;
+
+    --c-transplant:#5B8C4A;
+    --c-fertilize:#8B6A46;
+    --c-pest:#B5563C;
+    --c-weed:#7C8C3A;
+    --c-water:#4C82A0;
+    --c-observe:#6B6FA0;
+    --c-harvest:#C89A3E;
+    --c-etc:#8A8F7E;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --ink:#E7E9DD;
+      --ink-soft:#B7C0AC;
+      --ink-faint:#7E886F;
+      --paper:#12160E;
+      --paper-raised:#1A2013;
+      --paper-sunken:#0D1009;
+      --line: rgba(231,233,221,0.16);
+      --line-soft: rgba(231,233,221,0.08);
+      --accent:#D9A65A;
+      --accent-strong:#E8B96E;
+      --accent-ink:#2A1B06;
+      --accent-tint: rgba(217,166,90,0.16);
+      --shadow: 0 10px 32px rgba(0,0,0,0.5);
+      --shadow-sm: 0 2px 10px rgba(0,0,0,0.4);
+    }
+  }
+  :root[data-theme="dark"]{
+    --ink:#E7E9DD; --ink-soft:#B7C0AC; --ink-faint:#7E886F;
+    --paper:#12160E; --paper-raised:#1A2013; --paper-sunken:#0D1009;
+    --line: rgba(231,233,221,0.16); --line-soft: rgba(231,233,221,0.08);
+    --accent:#D9A65A; --accent-strong:#E8B96E; --accent-ink:#2A1B06;
+    --accent-tint: rgba(217,166,90,0.16);
+    --shadow: 0 10px 32px rgba(0,0,0,0.5); --shadow-sm: 0 2px 10px rgba(0,0,0,0.4);
+  }
+  :root[data-theme="light"]{
+    --ink:#1F2A1A; --ink-soft:#4B5A43; --ink-faint:#7C8873;
+    --paper:#EDEFE3; --paper-raised:#F8F9F1; --paper-sunken:#E2E5D6;
+    --line: rgba(31,42,26,0.14); --line-soft: rgba(31,42,26,0.08);
+    --accent:#B9863A; --accent-strong:#96692A; --accent-ink:#3A2708;
+    --accent-tint: rgba(185,134,58,0.14);
+    --shadow: 0 10px 28px rgba(31,42,26,0.12); --shadow-sm: 0 2px 8px rgba(31,42,26,0.08);
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:var(--sans); font-size:15px; line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{ font-family:var(--serif); font-weight:600; text-wrap:balance; margin:0; color:var(--ink); }
+  button{ font-family:var(--sans); cursor:pointer; }
+  input,textarea,select{ font-family:var(--sans); color:var(--ink); }
+  ::selection{ background:var(--accent-tint); }
+  :focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+
+  .app{ max-width:1080px; margin:0 auto; padding:28px 24px 80px; }
+
+  /* ---------- Header ---------- */
+  .topbar{
+    position:relative; overflow:hidden;
+    background:
+      repeating-linear-gradient(180deg, var(--line-soft) 0 1px, transparent 1px 22px),
+      var(--paper-raised);
+    border:1px solid var(--line); border-radius:var(--radius);
+    padding:22px 24px; margin-bottom:20px;
+    box-shadow:var(--shadow-sm);
+    display:flex; flex-wrap:wrap; gap:18px; align-items:flex-end; justify-content:space-between;
+  }
+  .brand-eyebrow{
+    display:block; font-size:12px; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--accent-strong); font-weight:600; margin-bottom:6px;
+  }
+  .brand h1{ font-size:26px; }
+  .brand .farm-line{ margin-top:6px; font-size:13px; color:var(--ink-soft); }
+  .brand .farm-line button{
+    background:none; border:none; color:var(--accent-strong); font-size:13px;
+    text-decoration:underline; text-underline-offset:2px; padding:0; margin-left:6px;
+  }
+
+  .stats-row{ display:flex; gap:10px; flex-wrap:wrap; }
+  .stat-chip{
+    background:var(--paper-sunken); border:1px solid var(--line);
+    border-radius:999px; padding:7px 14px; font-size:12.5px; color:var(--ink-soft);
+    display:flex; gap:6px; align-items:baseline; white-space:nowrap;
+  }
+  .stat-chip b{ font-family:var(--serif); font-size:15px; color:var(--ink); font-variant-numeric:tabular-nums; }
+  .stat-chip.warn{ border-color:var(--c-pest); background:rgba(181,86,60,0.1); color:var(--c-pest); }
+  .stat-chip.warn b{ color:var(--c-pest); }
+
+  .actions{ display:flex; gap:8px; flex-wrap:wrap; }
+  .btn{
+    border:1px solid var(--line); background:var(--paper-raised); color:var(--ink);
+    border-radius:var(--radius-sm); padding:9px 14px; font-size:13px; font-weight:500;
+    transition:border-color .15s, transform .1s, background .15s;
+  }
+  .btn:hover{ border-color:var(--accent); background:var(--accent-tint); }
+  .btn:active{ transform:translateY(1px); }
+  .btn-primary{ background:var(--accent); border-color:var(--accent); color:var(--accent-ink); font-weight:600; }
+  .btn-primary:hover{ background:var(--accent-strong); border-color:var(--accent-strong); }
+  .btn-ghost{ background:transparent; }
+  .btn-danger{ color:var(--c-pest); border-color:var(--line); }
+  .btn-danger:hover{ border-color:var(--c-pest); background:rgba(181,86,60,0.1); }
+  .btn:disabled{ opacity:.45; cursor:not-allowed; }
+
+  /* ---------- Farm info panel ---------- */
+  .farm-panel{
+    display:none; background:var(--paper-raised); border:1px solid var(--line);
+    border-radius:var(--radius); padding:18px 20px; margin-bottom:20px; box-shadow:var(--shadow-sm);
+  }
+  .farm-panel.open{ display:block; }
+  .farm-panel h3{ font-size:15px; margin-bottom:12px; }
+  .farm-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:12px; }
+  .field label{ display:block; font-size:12px; color:var(--ink-faint); margin-bottom:4px; }
+  .field input{
+    width:100%; border:1px solid var(--line); background:var(--paper); color:var(--ink);
+    border-radius:var(--radius-sm); padding:8px 10px; font-size:13.5px;
+  }
+  .field input:focus{ border-color:var(--accent); }
+
+  /* ---------- Tabs ---------- */
+  .view-tabs{ display:flex; gap:4px; background:var(--paper-sunken); border:1px solid var(--line); border-radius:999px; padding:3px; margin-bottom:18px; width:fit-content; }
+  .view-tabs button{
+    border:none; background:none; padding:8px 18px; border-radius:999px; font-size:13.5px; color:var(--ink-soft); font-weight:500;
+  }
+  .view-tabs button.active{ background:var(--paper-raised); color:var(--ink); box-shadow:var(--shadow-sm); }
+
+  /* ---------- Legend ---------- */
+  .legend{ display:flex; gap:14px; flex-wrap:wrap; margin-bottom:14px; }
+  .legend-item{ display:flex; align-items:center; gap:6px; font-size:12.5px; color:var(--ink-soft); }
+  .legend-emoji{ font-size:13px; line-height:1; }
+
+  /* ---------- Calendar ---------- */
+  .month-nav{ display:flex; align-items:center; justify-content:center; gap:18px; margin-bottom:16px; }
+  .month-nav .month-label{ font-family:var(--serif); font-size:20px; min-width:150px; text-align:center; font-variant-numeric:tabular-nums; }
+  .nav-btn{
+    width:34px; height:34px; border-radius:50%; border:1px solid var(--line); background:var(--paper-raised);
+    display:flex; align-items:center; justify-content:center; font-size:16px; color:var(--ink-soft);
+  }
+  .nav-btn:hover{ border-color:var(--accent); color:var(--accent-strong); }
+
+  .calendar{ border:1px solid var(--line); border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow-sm); background:var(--paper-raised); }
+  .weekday-row{ display:grid; grid-template-columns:repeat(7,1fr); background:var(--paper-sunken); }
+  .weekday-row div{ padding:10px 0; text-align:center; font-size:12px; color:var(--ink-faint); font-weight:600; letter-spacing:.04em; }
+  .weekday-row div:first-child{ color:var(--c-pest); }
+  .weekday-row div:last-child{ color:var(--c-water); }
+
+  .day-grid{ display:grid; grid-template-columns:repeat(7,1fr); }
+  .day-cell{
+    position:relative; min-height:88px; border-right:1px solid var(--line-soft); border-bottom:1px solid var(--line-soft);
+    padding:8px; display:flex; flex-direction:column; gap:5px; text-align:left; background:transparent; color:var(--ink);
+    transition:background .12s;
+  }
+  .day-cell:nth-child(7n){ border-right:none; }
+  .day-cell.blank{ background:var(--paper-sunken); opacity:.35; }
+  .day-cell:not(.blank):hover{ background:var(--accent-tint); }
+  .day-cell .num{ font-size:13px; font-variant-numeric:tabular-nums; color:var(--ink-soft); }
+  .day-cell.sun .num{ color:var(--c-pest); }
+  .day-cell.sat .num{ color:var(--c-water); }
+  .day-cell.today .num{
+    background:var(--accent); color:var(--accent-ink); width:22px; height:22px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center; font-weight:700;
+  }
+  .day-tags{ display:flex; flex-direction:column; gap:3px; }
+  .day-tag{
+    display:flex; align-items:center; gap:4px; font-size:10.5px; line-height:1.3;
+    padding:2px 6px 2px 5px; border-radius:5px; background:var(--paper-sunken);
+    border-left:3px solid var(--tag-color, var(--c-etc));
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:var(--ink-soft);
+  }
+  .day-tag .em{ font-size:10.5px; line-height:1; flex:none; }
+  .day-tag-more{ font-size:10px; color:var(--ink-faint); padding-left:6px; }
+  .day-photo-flag{ margin-top:auto; font-size:10.5px; color:var(--ink-faint); }
+
+  /* ---------- Timeline ---------- */
+  .timeline{ display:flex; flex-direction:column; gap:16px; }
+  .empty-state{
+    text-align:center; padding:60px 20px; color:var(--ink-faint); border:1px dashed var(--line); border-radius:var(--radius);
+  }
+  .empty-state b{ display:block; color:var(--ink-soft); font-family:var(--serif); font-size:17px; margin-bottom:6px; }
+  .tl-card{
+    background:var(--paper-raised); border:1px solid var(--line); border-radius:var(--radius); padding:18px 20px; box-shadow:var(--shadow-sm);
+  }
+  .tl-head{ display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:8px; }
+  .tl-date{ font-family:var(--serif); font-size:17px; font-variant-numeric:tabular-nums; }
+  .tl-meta{ font-size:12.5px; color:var(--ink-faint); }
+  .tag-chip{
+    display:inline-flex; align-items:center; gap:5px; font-size:12px; padding:3px 10px 3px 8px;
+    border-radius:999px; background:var(--paper-sunken); color:var(--ink-soft); margin:0 6px 6px 0;
+  }
+  .tl-note{ font-size:13.5px; color:var(--ink-soft); margin:8px 0 12px; white-space:pre-wrap; }
+  .tl-photos{ display:flex; gap:8px; flex-wrap:wrap; }
+  .tl-photos img{ width:96px; height:96px; object-fit:cover; border-radius:var(--radius-sm); border:1px solid var(--line); cursor:zoom-in; }
+
+  /* ---------- Finance ---------- */
+  .balance-bar{
+    display:flex; align-items:baseline; justify-content:space-between; flex-wrap:wrap; gap:10px;
+    background:var(--paper-raised); border:1px solid var(--line); border-radius:var(--radius);
+    padding:18px 22px; margin-bottom:18px; box-shadow:var(--shadow-sm);
+  }
+  .balance-bar .bb-label{ font-size:13px; color:var(--ink-soft); }
+  .balance-bar .bb-formula{ font-size:12.5px; color:var(--ink-faint); font-variant-numeric:tabular-nums; }
+  .balance-bar .bb-value{ font-family:var(--serif); font-size:28px; font-variant-numeric:tabular-nums; }
+  .balance-bar .bb-value.pos{ color:var(--c-transplant); }
+  .balance-bar .bb-value.neg{ color:var(--c-pest); }
+
+  .finance-grid{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .finance-panel{
+    background:var(--paper-raised); border:1px solid var(--line); border-radius:var(--radius);
+    padding:16px 18px; box-shadow:var(--shadow-sm); border-top:3px solid var(--panel-color, var(--c-etc));
+  }
+  .finance-expense{ --panel-color:var(--c-pest); }
+  .finance-income{ --panel-color:var(--c-transplant); }
+  .finance-panel h3{ font-size:16px; display:flex; align-items:center; gap:7px; margin-bottom:12px; }
+  .fp-emoji{ font-size:16px; }
+  .finance-form{ display:grid; grid-template-columns:auto 1fr auto auto; gap:8px; margin-bottom:14px; }
+  .finance-form input{
+    border:1px solid var(--line); background:var(--paper); color:var(--ink); border-radius:var(--radius-sm);
+    padding:8px 10px; font-size:13px; font-variant-numeric:tabular-nums;
+  }
+  .finance-form input:focus{ border-color:var(--accent); }
+  .finance-form #expDesc, .finance-form #incDesc{ min-width:0; }
+  .finance-form input[type=number]{ width:110px; }
+  .finance-form input[type=date]{ width:150px; }
+  .finance-table-wrap{ overflow-x:auto; }
+  table.finance-table{ width:100%; border-collapse:collapse; font-size:13px; }
+  table.finance-table th{
+    text-align:left; font-size:11.5px; color:var(--ink-faint); font-weight:600; padding:6px 8px;
+    border-bottom:1px solid var(--line);
+  }
+  table.finance-table td{ padding:8px; border-bottom:1px solid var(--line-soft); color:var(--ink-soft); vertical-align:middle; }
+  table.finance-table th.num, table.finance-table td.num{ text-align:right; font-variant-numeric:tabular-nums; }
+  table.finance-table tfoot td{ border-bottom:none; border-top:1px solid var(--line); font-weight:700; color:var(--ink); padding-top:10px; }
+  .finance-empty-row td{ text-align:center; color:var(--ink-faint); padding:16px 8px; }
+  .row-del{ background:none; border:none; color:var(--ink-faint); font-size:13px; padding:2px 6px; }
+  .row-del:hover{ color:var(--c-pest); }
+
+  @media (max-width:760px){
+    .finance-grid{ grid-template-columns:1fr; }
+    .finance-form{ grid-template-columns:1fr 1fr; }
+    .finance-form input[type=date], .finance-form input[type=number]{ width:100%; }
+    .finance-form button{ grid-column:1 / -1; }
+  }
+
+  /* ---------- Drawer ---------- */
+  .drawer-backdrop{ position:fixed; inset:0; background:rgba(15,18,10,0.4); backdrop-filter:blur(1px); z-index:40; opacity:0; pointer-events:none; transition:opacity .18s; }
+  .drawer-backdrop.open{ opacity:1; pointer-events:auto; }
+  .drawer{
+    position:fixed; top:0; right:0; height:100%; width:420px; max-width:92vw; background:var(--paper-raised);
+    border-left:1px solid var(--line); box-shadow:var(--shadow); z-index:41; transform:translateX(100%);
+    transition:transform .22s ease; display:flex; flex-direction:column;
+  }
+  .drawer.open{ transform:translateX(0); }
+  .drawer-header{ display:flex; align-items:center; justify-content:space-between; padding:18px 20px; border-bottom:1px solid var(--line); }
+  .drawer-header h2{ font-size:19px; font-variant-numeric:tabular-nums; }
+  .drawer-close{ background:none; border:none; font-size:20px; color:var(--ink-faint); line-height:1; padding:4px 6px; }
+  .drawer-close:hover{ color:var(--ink); }
+  .drawer-body{ padding:18px 20px; overflow-y:auto; flex:1; display:flex; flex-direction:column; gap:18px; }
+  .drawer-footer{ padding:16px 20px; border-top:1px solid var(--line); display:flex; gap:8px; }
+
+  .type-grid{ display:flex; flex-wrap:wrap; gap:8px; }
+  .type-pill{
+    border:1px solid var(--line); background:var(--paper); border-radius:999px; padding:6px 13px 6px 10px;
+    font-size:12.5px; color:var(--ink-soft); display:flex; align-items:center; gap:6px;
+  }
+  .type-pill.selected{ background:var(--accent-tint); border-color:var(--accent); color:var(--ink); font-weight:600; }
+
+  .field-group label{ display:block; font-size:12px; color:var(--ink-faint); margin-bottom:5px; }
+  .row-2{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  textarea, .drawer input[type=text]{
+    width:100%; border:1px solid var(--line); background:var(--paper); color:var(--ink);
+    border-radius:var(--radius-sm); padding:9px 11px; font-size:13.5px; resize:vertical;
+  }
+  textarea:focus, .drawer input:focus{ border-color:var(--accent); }
+  textarea{ min-height:80px; font-family:var(--sans); line-height:1.55; }
+
+  .photo-drop{
+    border:1.5px dashed var(--line); border-radius:var(--radius-sm); padding:16px; text-align:center;
+    font-size:12.5px; color:var(--ink-faint); cursor:pointer; transition:border-color .15s;
+  }
+  .photo-drop:hover{ border-color:var(--accent); color:var(--accent-strong); }
+  .photo-thumbs{ display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
+  .photo-thumb{ position:relative; width:76px; height:76px; }
+  .photo-thumb img{ width:100%; height:100%; object-fit:cover; border-radius:var(--radius-sm); border:1px solid var(--line); }
+  .photo-thumb .rm{
+    position:absolute; top:-6px; right:-6px; width:18px; height:18px; border-radius:50%; background:var(--c-pest);
+    color:#fff; border:none; font-size:11px; line-height:1; display:flex; align-items:center; justify-content:center;
+  }
+
+  /* ---------- Lightbox ---------- */
+  .lightbox{ position:fixed; inset:0; background:rgba(10,12,7,0.86); z-index:60; display:none; align-items:center; justify-content:center; padding:30px; }
+  .lightbox.open{ display:flex; }
+  .lightbox img{ max-width:100%; max-height:100%; border-radius:6px; box-shadow:0 20px 60px rgba(0,0,0,.5); }
+
+  .toast{
+    position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(20px); background:var(--ink); color:var(--paper);
+    padding:11px 20px; border-radius:999px; font-size:13px; box-shadow:var(--shadow); opacity:0; pointer-events:none; transition:all .2s; z-index:80;
+  }
+  .toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+
+  footer.hint{ text-align:center; margin-top:30px; font-size:12px; color:var(--ink-faint); }
+
+  @media (max-width:640px){
+    .day-cell{ min-height:66px; padding:5px; }
+    .topbar{ flex-direction:column; align-items:flex-start; }
+    .row-2{ grid-template-columns:1fr; }
+  }
+
+  /* ---------- Print ---------- */
+  .print-only{ display:none; }
+  @media print{
+    body{ background:#fff; }
+    .no-print{ display:none !important; }
+    .print-only{ display:block !important; }
+    .print-only{ color:#111; font-family:var(--sans); padding:0 6mm; }
+    .pr-title{ font-family:var(--serif); font-size:22px; margin-bottom:2px; }
+    .pr-sub{ font-size:11px; color:#555; margin-bottom:14px; }
+    .pr-farm{ display:grid; grid-template-columns:repeat(4,1fr); gap:6px 14px; font-size:11.5px; margin-bottom:16px; border:1px solid #ccc; padding:10px 12px; border-radius:6px; }
+    .pr-farm div span{ display:block; color:#777; font-size:10px; }
+    table.pr-table{ width:100%; border-collapse:collapse; font-size:11px; margin-bottom:22px; }
+    table.pr-table th, table.pr-table td{ border:1px solid #ccc; padding:6px 8px; text-align:left; vertical-align:top; }
+    table.pr-table th{ background:#f0f0e8; font-weight:700; }
+    .pr-appendix h3{ font-family:var(--serif); font-size:15px; margin:0 0 10px; }
+    .pr-group{ margin-bottom:14px; break-inside:avoid; }
+    .pr-group-date{ font-size:11.5px; font-weight:700; margin-bottom:6px; }
+    .pr-photos{ display:flex; gap:6px; flex-wrap:wrap; }
+    .pr-photos img{ width:110px; height:110px; object-fit:cover; border:1px solid #ccc; border-radius:4px; }
+    @page{ margin:14mm 12mm; }
+  }
+</style>
+
+<div class="app no-print" id="app">
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-eyebrow">Rice Paddy Field Journal</span>
+      <h1 id="pageTitle">26년 논농사 일지</h1>
+      <div class="farm-line" id="farmLine"></div>
+    </div>
+    <div class="stats-row" id="statsRow"></div>
+    <div class="actions">
+      <button class="btn" id="btnImport">불러오기</button>
+      <input type="file" id="fileImport" accept="application/json" hidden />
+      <button class="btn" id="btnExport">내보내기</button>
+      <button class="btn btn-primary" id="btnPrint">제출용 인쇄</button>
+    </div>
+  </header>
+
+  <div class="farm-panel" id="farmPanel">
+    <h3>농지 정보 <span style="font-weight:400;color:var(--ink-faint);font-size:12px;">— 인쇄물 상단에 표시됩니다</span></h3>
+    <div class="farm-grid">
+      <div class="field"><label>경작자</label><input type="text" id="fName" placeholder="예: 홍길동" /></div>
+      <div class="field"><label>농지 소재지</label><input type="text" id="fLocation" placeholder="예: OO시 OO면 OO리 123" /></div>
+      <div class="field"><label>면적</label><input type="text" id="fArea" placeholder="예: 3,300㎡ (약 1,000평)" /></div>
+      <div class="field"><label>재배 품종</label><input type="text" id="fVariety" placeholder="예: 신동진" /></div>
+    </div>
+    <div style="margin-top:12px; display:flex; gap:8px;">
+      <button class="btn btn-primary" id="btnFarmSave">저장</button>
+      <button class="btn btn-ghost" id="btnFarmClose">닫기</button>
+    </div>
+  </div>
+
+  <nav class="view-tabs">
+    <button data-view="calendar" class="active">달력</button>
+    <button data-view="timeline">생육 타임라인</button>
+    <button data-view="finance">수입·지출</button>
+  </nav>
+
+  <section id="calendarView">
+    <div class="legend" id="legend"></div>
+    <div class="month-nav">
+      <button class="nav-btn" id="prevMonth">‹</button>
+      <div class="month-label" id="monthLabel"></div>
+      <button class="nav-btn" id="nextMonth">›</button>
+    </div>
+    <div class="calendar">
+      <div class="weekday-row"><div>일</div><div>월</div><div>화</div><div>수</div><div>목</div><div>금</div><div>토</div></div>
+      <div class="day-grid" id="dayGrid"></div>
+    </div>
+  </section>
+
+  <section id="timelineView" hidden>
+    <div class="timeline" id="timelineList"></div>
+  </section>
+
+  <section id="financeView" hidden>
+    <div class="balance-bar" id="balanceBar"></div>
+    <div class="finance-grid">
+      <div class="finance-panel finance-expense">
+        <h3><span class="fp-emoji" aria-hidden="true">💸</span>지출</h3>
+        <form class="finance-form" id="expenseForm">
+          <input type="date" id="expDate" required />
+          <input type="text" id="expDesc" placeholder="예: 비료 구매" required />
+          <input type="number" id="expAmount" placeholder="금액" min="0" step="1" inputmode="numeric" required />
+          <button type="submit" class="btn btn-primary">추가</button>
+        </form>
+        <div class="finance-table-wrap">
+          <table class="finance-table">
+            <thead><tr><th>날짜</th><th>내용</th><th class="num">금액</th><th></th></tr></thead>
+            <tbody id="expenseRows"></tbody>
+            <tfoot><tr><td colspan="2">지출 합계</td><td class="num" id="expenseTotal">0원</td><td></td></tr></tfoot>
+          </table>
+        </div>
+      </div>
+      <div class="finance-panel finance-income">
+        <h3><span class="fp-emoji" aria-hidden="true">💰</span>수입</h3>
+        <form class="finance-form" id="incomeForm">
+          <input type="date" id="incDate" required />
+          <input type="text" id="incDesc" placeholder="예: 쌀 판매" required />
+          <input type="number" id="incAmount" placeholder="금액" min="0" step="1" inputmode="numeric" required />
+          <button type="submit" class="btn btn-primary">추가</button>
+        </form>
+        <div class="finance-table-wrap">
+          <table class="finance-table">
+            <thead><tr><th>날짜</th><th>내용</th><th class="num">금액</th><th></th></tr></thead>
+            <tbody id="incomeRows"></tbody>
+            <tfoot><tr><td colspan="2">수입 합계</td><td class="num" id="incomeTotal">0원</td><td></td></tr></tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="hint">기록은 이 브라우저에 자동 저장됩니다. 다른 기기·사람과 나누려면 “내보내기”로 파일을 전달하고 상대는 “불러오기”로 여세요.</footer>
+</div>
+
+<div class="drawer-backdrop no-print" id="backdrop"></div>
+<aside class="drawer no-print" id="drawer">
+  <div class="drawer-header">
+    <h2 id="drawerDate">날짜</h2>
+    <button class="drawer-close" id="drawerClose">✕</button>
+  </div>
+  <div class="drawer-body">
+    <div class="field-group">
+      <label>작업 종류 (복수 선택)</label>
+      <div class="type-grid" id="typeGrid"></div>
+    </div>
+    <div class="row-2">
+      <div class="field-group"><label>날씨</label><input type="text" id="fldWeather" placeholder="예: 맑음" /></div>
+      <div class="field-group"><label>기온</label><input type="text" id="fldTemp" placeholder="예: 27℃" /></div>
+    </div>
+    <div class="field-group">
+      <label>생육 상태 · 메모</label>
+      <textarea id="fldNote" placeholder="벼 키, 색, 병해충 유무 등 관찰 내용을 적어주세요"></textarea>
+    </div>
+    <div class="field-group">
+      <label>사진 (하루 1~3장 권장)</label>
+      <label class="photo-drop" for="fldPhoto">탭하여 사진 선택 · 자동 압축 저장됩니다</label>
+      <input type="file" id="fldPhoto" accept="image/*" multiple hidden />
+      <div class="photo-thumbs" id="photoThumbs"></div>
+    </div>
+  </div>
+  <div class="drawer-footer">
+    <button class="btn btn-primary" id="btnSaveRecord" style="flex:1;">저장</button>
+    <button class="btn btn-danger" id="btnDeleteRecord">이 날 기록 삭제</button>
+  </div>
+</aside>
+
+<div class="lightbox no-print" id="lightbox"><img id="lightboxImg" src="" alt="" /></div>
+<div class="toast no-print" id="toast"></div>
+
+<div class="print-only" id="printReport"></div>
+
+<script>
+(function(){
+  "use strict";
+
+  var STORAGE_KEY = "riceJournal.v1";
+  var WORK_TYPES = [
+    { id:"transplant", label:"모내기",  varName:"--c-transplant", emoji:"🌱" },
+    { id:"water",      label:"물관리",  varName:"--c-water",      emoji:"💧" },
+    { id:"fertilize",  label:"시비",    varName:"--c-fertilize",  emoji:"🧪" },
+    { id:"weed",       label:"제초",    varName:"--c-weed",       emoji:"✂️" },
+    { id:"pest",       label:"방제",    varName:"--c-pest",       emoji:"🛡️" },
+    { id:"observe",    label:"관찰",    varName:"--c-observe",    emoji:"🔍" },
+    { id:"harvest",    label:"수확",    varName:"--c-harvest",    emoji:"🌾" },
+    { id:"etc",        label:"기타",    varName:"--c-etc",        emoji:"📝" }
+  ];
+  var typeById = {};
+  WORK_TYPES.forEach(function(t){ typeById[t.id] = t; });
+
+  function pad(n){ return String(n).padStart(2,"0"); }
+  function dateStr(y,m,d){ return y + "-" + pad(m+1) + "-" + pad(d); }
+  function todayStr(){ var t = new Date(); return dateStr(t.getFullYear(), t.getMonth(), t.getDate()); }
+
+  // ---------- store ----------
+  function defaultStore(){ return { farm:{ name:"", location:"", area:"", variety:"" }, records:{}, finance:{ expenses:[], incomes:[] } }; }
+  function loadStore(){
+    try{
+      var raw = localStorage.getItem(STORAGE_KEY);
+      if(!raw) return defaultStore();
+      var parsed = JSON.parse(raw);
+      if(!parsed.records) parsed.records = {};
+      if(!parsed.farm) parsed.farm = { name:"", location:"", area:"", variety:"" };
+      if(!parsed.finance) parsed.finance = { expenses:[], incomes:[] };
+      if(!Array.isArray(parsed.finance.expenses)) parsed.finance.expenses = [];
+      if(!Array.isArray(parsed.finance.incomes)) parsed.finance.incomes = [];
+      return parsed;
+    }catch(e){ return defaultStore(); }
+  }
+  function saveStore(){
+    try{
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(store));
+      return true;
+    }catch(e){
+      showToast("저장 공간이 가득 찼습니다. '내보내기'로 백업한 뒤, 오래된 날짜의 사진을 지우고 다시 시도해주세요.");
+      return false;
+    }
+  }
+
+  var store = loadStore();
+  var view = { year: new Date().getFullYear(), month: new Date().getMonth(), tab:"calendar" };
+  var drawerState = { date:null, types:[], photos:[] };
+
+  // ---------- toast ----------
+  var toastEl = document.getElementById("toast");
+  var toastTimer = null;
+  function showToast(msg){
+    toastEl.textContent = msg;
+    toastEl.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){ toastEl.classList.remove("show"); }, 2600);
+  }
+
+  // ---------- farm panel ----------
+  var farmPanel = document.getElementById("farmPanel");
+  function renderFarmLine(){
+    var f = store.farm;
+    var line = document.getElementById("farmLine");
+    if(f.name || f.location){
+      line.innerHTML = (f.name? escapeHtml(f.name)+" · " : "") + escapeHtml(f.location||"") + (f.area? " · "+escapeHtml(f.area) : "") + ' <button id="btnFarmToggle" type="button">수정</button>';
+      document.getElementById("btnFarmToggle").addEventListener("click", toggleFarmPanel);
+    } else {
+      line.innerHTML = '농지 정보 미입력 <button id="btnFarmToggle" type="button">입력하기</button>';
+      document.getElementById("btnFarmToggle").addEventListener("click", toggleFarmPanel);
+    }
+  }
+  function toggleFarmPanel(){
+    farmPanel.classList.toggle("open");
+    if(farmPanel.classList.contains("open")){
+      document.getElementById("fName").value = store.farm.name||"";
+      document.getElementById("fLocation").value = store.farm.location||"";
+      document.getElementById("fArea").value = store.farm.area||"";
+      document.getElementById("fVariety").value = store.farm.variety||"";
+    }
+  }
+  document.getElementById("btnFarmClose").addEventListener("click", function(){ farmPanel.classList.remove("open"); });
+  document.getElementById("btnFarmSave").addEventListener("click", function(){
+    store.farm = {
+      name: document.getElementById("fName").value.trim(),
+      location: document.getElementById("fLocation").value.trim(),
+      area: document.getElementById("fArea").value.trim(),
+      variety: document.getElementById("fVariety").value.trim()
+    };
+    saveStore(); renderFarmLine(); farmPanel.classList.remove("open");
+    showToast("농지 정보를 저장했습니다.");
+  });
+
+  // ---------- legend ----------
+  (function renderLegend(){
+    var el = document.getElementById("legend");
+    el.innerHTML = WORK_TYPES.map(function(t){
+      return '<span class="legend-item"><span class="legend-emoji" aria-hidden="true">'+t.emoji+'</span>'+t.label+'</span>';
+    }).join("");
+  })();
+
+  // ---------- tabs ----------
+  var tabButtons = document.querySelectorAll(".view-tabs button");
+  tabButtons.forEach(function(btn){
+    btn.addEventListener("click", function(){
+      tabButtons.forEach(function(b){ b.classList.remove("active"); });
+      btn.classList.add("active");
+      view.tab = btn.dataset.view;
+      document.getElementById("calendarView").hidden = view.tab !== "calendar";
+      document.getElementById("timelineView").hidden = view.tab !== "timeline";
+      document.getElementById("financeView").hidden = view.tab !== "finance";
+      if(view.tab === "timeline") renderTimeline();
+      if(view.tab === "finance") renderFinance();
+    });
+  });
+
+  // ---------- stats ----------
+  var SAFE_QUOTA_MB = 5; // conservative estimate of typical browser localStorage limit
+  function estimateStoreSizeMB(){
+    try{ return JSON.stringify(store).length / (1024*1024); }catch(e){ return 0; }
+  }
+
+  function renderStats(){
+    var entries = Object.keys(store.records);
+    var thisYear = String(view.year);
+    var yearCount = entries.filter(function(d){ return d.slice(0,4) === thisYear; }).length;
+    var monthKey = view.year + "-" + pad(view.month+1);
+    var monthCount = entries.filter(function(d){ return d.slice(0,7) === monthKey; }).length;
+    var sizeMB = estimateStoreSizeMB();
+    var sizeLabel = sizeMB < 1 ? Math.round(sizeMB*1024)+"KB" : sizeMB.toFixed(1)+"MB";
+    var ratio = sizeMB / SAFE_QUOTA_MB;
+    var sizeChipClass = "stat-chip" + (ratio > 0.7 ? " warn" : "");
+    var el = document.getElementById("statsRow");
+    el.innerHTML =
+      '<span class="stat-chip"><b>'+yearCount+'</b>'+view.year+'년 방문일</span>' +
+      '<span class="stat-chip"><b>'+monthCount+'</b>이번 달 방문일</span>' +
+      '<span class="stat-chip"><b>'+entries.length+'</b>전체 기록</span>' +
+      '<span class="'+sizeChipClass+'" title="브라우저 저장 공간은 보통 약 '+SAFE_QUOTA_MB+'MB까지입니다. 한도에 가까워지면 내보내기로 백업해주세요."><b>'+sizeLabel+'</b>사용 용량</span>';
+  }
+
+  // ---------- calendar ----------
+  var monthLabel = document.getElementById("monthLabel");
+  var dayGrid = document.getElementById("dayGrid");
+
+  function renderCalendar(){
+    monthLabel.textContent = view.year + "년 " + (view.month+1) + "월";
+    var firstWeekday = new Date(view.year, view.month, 1).getDay();
+    var totalDays = new Date(view.year, view.month+1, 0).getDate();
+    var cells = [];
+    for(var i=0;i<firstWeekday;i++){ cells.push(null); }
+    for(var d=1; d<=totalDays; d++){ cells.push(d); }
+    while(cells.length % 7 !== 0){ cells.push(null); }
+
+    var html = "";
+    var today = todayStr();
+    cells.forEach(function(d, idx){
+      var col = idx % 7;
+      if(d === null){
+        html += '<div class="day-cell blank"></div>';
+        return;
+      }
+      var ds = dateStr(view.year, view.month, d);
+      var rec = store.records[ds];
+      var classes = ["day-cell"];
+      if(col===0) classes.push("sun");
+      if(col===6) classes.push("sat");
+      if(ds === today) classes.push("today");
+      var tagsHtml = "";
+      var photoFlag = "";
+      if(rec){
+        var types = rec.workTypes || [];
+        var shown = types.slice(0,2).map(function(id){
+          var t = typeById[id];
+          if(!t) return "";
+          return '<span class="day-tag" style="--tag-color:var('+t.varName+')"><span class="em" aria-hidden="true">'+t.emoji+'</span>'+t.label+'</span>';
+        }).join("");
+        var moreHtml = types.length > 2 ? '<span class="day-tag-more">+'+(types.length-2)+'</span>' : "";
+        tagsHtml = (shown || moreHtml) ? '<div class="day-tags">' + shown + moreHtml + '</div>' : "";
+        if(rec.photos && rec.photos.length){
+          photoFlag = '<div class="day-photo-flag">사진 '+rec.photos.length+'</div>';
+        }
+      }
+      html += '<button type="button" class="'+classes.join(" ")+'" data-date="'+ds+'">' +
+                '<span class="num">'+d+'</span>' + tagsHtml + photoFlag +
+              '</button>';
+    });
+    dayGrid.innerHTML = html;
+    renderStats();
+  }
+
+  document.getElementById("prevMonth").addEventListener("click", function(){
+    view.month--; if(view.month<0){ view.month=11; view.year--; }
+    renderCalendar();
+  });
+  document.getElementById("nextMonth").addEventListener("click", function(){
+    view.month++; if(view.month>11){ view.month=0; view.year++; }
+    renderCalendar();
+  });
+  dayGrid.addEventListener("click", function(e){
+    var cell = e.target.closest(".day-cell[data-date]");
+    if(!cell) return;
+    openDrawer(cell.dataset.date);
+  });
+
+  // ---------- timeline ----------
+  function renderTimeline(){
+    var el = document.getElementById("timelineList");
+    var dates = Object.keys(store.records).sort();
+    if(dates.length === 0){
+      el.innerHTML = '<div class="empty-state"><b>아직 기록이 없습니다</b>달력에서 방문한 날짜를 눌러 첫 기록을 남겨보세요.</div>';
+      return;
+    }
+    el.innerHTML = dates.map(function(ds){
+      var rec = store.records[ds];
+      var tagsHtml = (rec.workTypes||[]).map(function(id){
+        var t = typeById[id]; if(!t) return "";
+        return '<span class="tag-chip"><span aria-hidden="true">'+t.emoji+'</span>'+t.label+'</span>';
+      }).join("");
+      var metaBits = [];
+      if(rec.weather) metaBits.push(escapeHtml(rec.weather));
+      if(rec.temp) metaBits.push(escapeHtml(rec.temp));
+      var photosHtml = (rec.photos||[]).map(function(p){
+        var safeUrl = escapeHtml(p.dataUrl||"");
+        return '<img src="'+safeUrl+'" data-full="'+safeUrl+'" alt="'+ds+' 사진" />';
+      }).join("");
+      return '<div class="tl-card">' +
+        '<div class="tl-head"><span class="tl-date">'+formatDateKr(ds)+'</span><span class="tl-meta">'+metaBits.join(" · ")+'</span></div>' +
+        '<div>'+tagsHtml+'</div>' +
+        (rec.note ? '<div class="tl-note">'+escapeHtml(rec.note)+'</div>' : '') +
+        (photosHtml ? '<div class="tl-photos">'+photosHtml+'</div>' : '') +
+      '</div>';
+    }).join("");
+  }
+  document.getElementById("timelineList").addEventListener("click", function(e){
+    if(e.target.tagName === "IMG"){ openLightbox(e.target.dataset.full); }
+  });
+
+  function formatDateKr(ds){
+    var parts = ds.split("-");
+    var y=parts[0], m=parseInt(parts[1],10), d=parseInt(parts[2],10);
+    var wd = ["일","월","화","수","목","금","토"][new Date(y,m-1,d).getDay()];
+    return y+"년 "+m+"월 "+d+"일 ("+wd+")";
+  }
+  function escapeHtml(s){
+    return s.replace(/[&<>"']/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
+    });
+  }
+
+  // ---------- finance ----------
+  function genId(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
+  function mergeFinanceList(target, incoming){
+    if(!Array.isArray(incoming)) return;
+    incoming.forEach(function(item){
+      if(!item || !item.id) return;
+      var idx = target.findIndex(function(t){ return t.id === item.id; });
+      if(idx > -1) target[idx] = item; else target.push(item);
+    });
+  }
+  function formatWon(n){ return Math.round(n).toLocaleString("ko-KR") + "원"; }
+  function formatDateShort(ds){
+    var p = (ds||"").split("-");
+    if(p.length !== 3) return ds||"";
+    return p[0].slice(2) + "." + p[1] + "." + p[2];
+  }
+  function sumAmounts(list){
+    return list.reduce(function(acc, item){ return acc + (Number(item.amount) || 0); }, 0);
+  }
+  function renderFinanceTable(tbodyId, list, kind){
+    var tbody = document.getElementById(tbodyId);
+    var sorted = list.slice().sort(function(a,b){ return a.date < b.date ? -1 : (a.date > b.date ? 1 : 0); });
+    if(sorted.length === 0){
+      tbody.innerHTML = '<tr class="finance-empty-row"><td colspan="4">아직 입력된 내역이 없습니다.</td></tr>';
+      return;
+    }
+    tbody.innerHTML = sorted.map(function(item){
+      return '<tr><td>'+formatDateShort(item.date)+'</td><td>'+escapeHtml(item.desc)+'</td>' +
+        '<td class="num">'+formatWon(item.amount)+'</td>' +
+        '<td><button type="button" class="row-del" data-kind="'+kind+'" data-id="'+item.id+'" title="삭제">✕</button></td></tr>';
+    }).join("");
+  }
+  function renderFinance(){
+    var expDateInput = document.getElementById("expDate");
+    var incDateInput = document.getElementById("incDate");
+    if(!expDateInput.value) expDateInput.value = todayStr();
+    if(!incDateInput.value) incDateInput.value = todayStr();
+
+    renderFinanceTable("expenseRows", store.finance.expenses, "expense");
+    renderFinanceTable("incomeRows", store.finance.incomes, "income");
+
+    var expenseTotal = sumAmounts(store.finance.expenses);
+    var incomeTotal = sumAmounts(store.finance.incomes);
+    document.getElementById("expenseTotal").textContent = formatWon(expenseTotal);
+    document.getElementById("incomeTotal").textContent = formatWon(incomeTotal);
+
+    var balance = incomeTotal - expenseTotal;
+    var cls = balance >= 0 ? "pos" : "neg";
+    document.getElementById("balanceBar").innerHTML =
+      '<div><div class="bb-label">최종 Balance (수입 − 지출)</div>' +
+      '<div class="bb-formula">'+formatWon(incomeTotal)+' − '+formatWon(expenseTotal)+'</div></div>' +
+      '<div class="bb-value '+cls+'">'+(balance < 0 ? "−" : "")+formatWon(Math.abs(balance))+'</div>';
+  }
+  function handleAddFinance(kind){
+    var prefix = kind === "expense" ? "exp" : "inc";
+    var dateInput = document.getElementById(prefix+"Date");
+    var descInput = document.getElementById(prefix+"Desc");
+    var amountInput = document.getElementById(prefix+"Amount");
+    var desc = descInput.value.trim();
+    var amount = parseFloat(amountInput.value);
+    if(!desc || !isFinite(amount) || amount < 0){
+      showToast("내용과 금액을 올바르게 입력해주세요.");
+      return;
+    }
+    var date = dateInput.value || todayStr();
+    var list = kind === "expense" ? store.finance.expenses : store.finance.incomes;
+    list.push({ id: genId(), date: date, desc: desc, amount: amount });
+    if(saveStore()){
+      descInput.value = ""; amountInput.value = "";
+      descInput.focus();
+      renderFinance();
+    }
+  }
+  function handleDeleteFinance(e, kind){
+    var btn = e.target.closest(".row-del");
+    if(!btn) return;
+    var id = btn.dataset.id;
+    var list = kind === "expense" ? store.finance.expenses : store.finance.incomes;
+    var idx = list.findIndex(function(it){ return it.id === id; });
+    if(idx > -1){ list.splice(idx,1); saveStore(); renderFinance(); }
+  }
+  document.getElementById("expenseForm").addEventListener("submit", function(e){ e.preventDefault(); handleAddFinance("expense"); });
+  document.getElementById("incomeForm").addEventListener("submit", function(e){ e.preventDefault(); handleAddFinance("income"); });
+  document.getElementById("expenseRows").addEventListener("click", function(e){ handleDeleteFinance(e, "expense"); });
+  document.getElementById("incomeRows").addEventListener("click", function(e){ handleDeleteFinance(e, "income"); });
+
+  // ---------- lightbox ----------
+  var lightbox = document.getElementById("lightbox");
+  var lightboxImg = document.getElementById("lightboxImg");
+  function openLightbox(src){ lightboxImg.src = src; lightbox.classList.add("open"); }
+  lightbox.addEventListener("click", function(){ lightbox.classList.remove("open"); lightboxImg.src=""; });
+
+  // ---------- drawer ----------
+  var drawer = document.getElementById("drawer");
+  var backdrop = document.getElementById("backdrop");
+  var typeGrid = document.getElementById("typeGrid");
+  var photoThumbs = document.getElementById("photoThumbs");
+
+  function renderTypeGrid(){
+    typeGrid.innerHTML = WORK_TYPES.map(function(t){
+      var sel = drawerState.types.indexOf(t.id) > -1;
+      return '<button type="button" class="type-pill'+(sel?" selected":"")+'" data-id="'+t.id+'">' +
+        '<span aria-hidden="true">'+t.emoji+'</span>'+t.label+'</button>';
+    }).join("");
+  }
+  typeGrid.addEventListener("click", function(e){
+    var btn = e.target.closest(".type-pill");
+    if(!btn) return;
+    var id = btn.dataset.id;
+    var idx = drawerState.types.indexOf(id);
+    if(idx > -1) drawerState.types.splice(idx,1); else drawerState.types.push(id);
+    renderTypeGrid();
+  });
+
+  function renderPhotoThumbs(){
+    photoThumbs.innerHTML = drawerState.photos.map(function(p, i){
+      return '<div class="photo-thumb"><img src="'+escapeHtml(p.dataUrl||"")+'" alt="사진" /><button type="button" class="rm" data-i="'+i+'">✕</button></div>';
+    }).join("");
+  }
+  photoThumbs.addEventListener("click", function(e){
+    var btn = e.target.closest(".rm");
+    if(!btn) return;
+    drawerState.photos.splice(parseInt(btn.dataset.i,10),1);
+    renderPhotoThumbs();
+  });
+
+  function compressImage(file){
+    return new Promise(function(resolve, reject){
+      var reader = new FileReader();
+      reader.onerror = reject;
+      reader.onload = function(){
+        var img = new Image();
+        img.onerror = reject;
+        img.onload = function(){
+          var TARGET_CHARS = 200000; // ~150KB after base64 overhead
+          var dims = [1000, 800, 640, 480];
+          var qualities = [0.62, 0.5, 0.4];
+          var result = null;
+          findSize:
+          for(var di=0; di<dims.length; di++){
+            var scale = Math.min(1, dims[di] / Math.max(img.width, img.height));
+            var w = Math.max(1, Math.round(img.width * scale)), h = Math.max(1, Math.round(img.height * scale));
+            var canvas = document.createElement("canvas");
+            canvas.width = w; canvas.height = h;
+            var ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0, w, h);
+            for(var qi=0; qi<qualities.length; qi++){
+              var dataUrl = canvas.toDataURL("image/jpeg", qualities[qi]);
+              result = dataUrl;
+              var isLastAttempt = (di === dims.length-1) && (qi === qualities.length-1);
+              if(dataUrl.length <= TARGET_CHARS || isLastAttempt) break findSize;
+            }
+          }
+          resolve(result);
+        };
+        img.src = reader.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  document.getElementById("fldPhoto").addEventListener("change", function(e){
+    var files = Array.from(e.target.files || []);
+    Promise.all(files.map(compressImage)).then(function(dataUrls){
+      dataUrls.forEach(function(dataUrl){ drawerState.photos.push({ dataUrl: dataUrl }); });
+      renderPhotoThumbs();
+    }).catch(function(){ showToast("사진을 불러오지 못했습니다."); });
+    e.target.value = "";
+  });
+
+  function openDrawer(ds){
+    drawerState.date = ds;
+    var rec = store.records[ds];
+    drawerState.types = rec ? (rec.workTypes||[]).slice() : [];
+    drawerState.photos = rec ? (rec.photos||[]).map(function(p){ return { dataUrl:p.dataUrl }; }) : [];
+    document.getElementById("drawerDate").textContent = formatDateKr(ds);
+    document.getElementById("fldWeather").value = rec ? (rec.weather||"") : "";
+    document.getElementById("fldTemp").value = rec ? (rec.temp||"") : "";
+    document.getElementById("fldNote").value = rec ? (rec.note||"") : "";
+    document.getElementById("btnDeleteRecord").style.display = rec ? "inline-block" : "none";
+    renderTypeGrid();
+    renderPhotoThumbs();
+    drawer.classList.add("open");
+    backdrop.classList.add("open");
+  }
+  function closeDrawer(){
+    drawer.classList.remove("open");
+    backdrop.classList.remove("open");
+  }
+  document.getElementById("drawerClose").addEventListener("click", closeDrawer);
+  backdrop.addEventListener("click", closeDrawer);
+
+  document.getElementById("btnSaveRecord").addEventListener("click", function(){
+    var ds = drawerState.date;
+    var weather = document.getElementById("fldWeather").value.trim();
+    var temp = document.getElementById("fldTemp").value.trim();
+    var note = document.getElementById("fldNote").value.trim();
+    if(drawerState.types.length===0 && !weather && !temp && !note && drawerState.photos.length===0){
+      showToast("작업 종류나 메모를 하나 이상 입력해주세요.");
+      return;
+    }
+    store.records[ds] = {
+      workTypes: drawerState.types.slice(),
+      weather: weather, temp: temp, note: note,
+      photos: drawerState.photos.slice(),
+      updatedAt: Date.now()
+    };
+    if(saveStore()){
+      showToast("기록을 저장했습니다.");
+      closeDrawer(); renderCalendar();
+      if(view.tab === "timeline") renderTimeline();
+    }
+  });
+  document.getElementById("btnDeleteRecord").addEventListener("click", function(){
+    var ds = drawerState.date;
+    if(!confirm(formatDateKr(ds)+" 기록을 삭제할까요?")) return;
+    delete store.records[ds];
+    saveStore();
+    closeDrawer(); renderCalendar();
+    if(view.tab === "timeline") renderTimeline();
+    showToast("삭제했습니다.");
+  });
+
+  // ---------- export / import ----------
+  document.getElementById("btnExport").addEventListener("click", function(){
+    var payload = JSON.stringify({ exportedAt: new Date().toISOString(), farm: store.farm, records: store.records, finance: store.finance }, null, 2);
+    var filename = "논농사일지_" + todayStr() + ".json";
+    if(window.claude && window.claude.downloads){
+      window.claude.downloads.save({ filename: filename, data: payload }).then(function(){
+        showToast("내보내기 완료. 상대방에게 파일을 전달해 주세요.");
+      }).catch(function(err){
+        if(err && err.code === "declined") return;
+        fallbackDownload(filename, payload);
+      });
+    } else {
+      fallbackDownload(filename, payload);
+    }
+  });
+  function fallbackDownload(filename, payload){
+    try{
+      var blob = new Blob([payload], { type: "application/json" });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement("a");
+      a.href = url; a.download = filename;
+      document.body.appendChild(a); a.click(); document.body.removeChild(a);
+      setTimeout(function(){ URL.revokeObjectURL(url); }, 2000);
+      showToast("내보내기 완료.");
+    }catch(e){ showToast("내보내기에 실패했습니다."); }
+  }
+
+  document.getElementById("btnImport").addEventListener("click", function(){
+    document.getElementById("fileImport").click();
+  });
+  document.getElementById("fileImport").addEventListener("change", function(e){
+    var file = e.target.files[0];
+    if(!file) return;
+    var reader = new FileReader();
+    reader.onload = function(){
+      try{
+        var data = JSON.parse(reader.result);
+        if(!data.records || typeof data.records !== "object") throw new Error("bad shape");
+        var incoming = Object.keys(data.records).length;
+        var financeIncoming = data.finance ? (data.finance.expenses||[]).length + (data.finance.incomes||[]).length : 0;
+        var ok = confirm(incoming + "일 분량의 일지 기록" + (financeIncoming ? " + 수입·지출 내역 " + financeIncoming + "건" : "") + "을 불러옵니다. 같은 날짜/내역은 덮어써집니다. 계속할까요?");
+        if(!ok) return;
+        Object.keys(data.records).forEach(function(ds){ store.records[ds] = data.records[ds]; });
+        if(data.farm && (!store.farm.name && !store.farm.location)){ store.farm = data.farm; renderFarmLine(); }
+        if(data.finance){
+          mergeFinanceList(store.finance.expenses, data.finance.expenses);
+          mergeFinanceList(store.finance.incomes, data.finance.incomes);
+        }
+        saveStore();
+        renderCalendar();
+        if(view.tab === "timeline") renderTimeline();
+        if(view.tab === "finance") renderFinance();
+        showToast("불러오기 완료 (" + incoming + "일" + (financeIncoming ? " + 내역 " + financeIncoming + "건" : "") + ").");
+      }catch(err){
+        showToast("올바른 백업 파일이 아닙니다.");
+      }
+    };
+    reader.readAsText(file);
+    e.target.value = "";
+  });
+
+  // ---------- print ----------
+  document.getElementById("btnPrint").addEventListener("click", function(){
+    buildPrintReport();
+    window.print();
+  });
+  function buildPrintReport(){
+    var dates = Object.keys(store.records).sort();
+    var f = store.farm;
+    var rows = dates.map(function(ds){
+      var rec = store.records[ds];
+      var types = (rec.workTypes||[]).map(function(id){ return typeById[id]?typeById[id].label:id; }).join(", ");
+      var weather = [rec.weather, rec.temp].filter(Boolean).map(escapeHtml).join(" / ");
+      return "<tr><td>"+formatDateKr(ds)+"</td><td>"+(types||"-")+"</td><td>"+(weather||"-")+"</td><td>"+escapeHtml(rec.note||"")+"</td></tr>";
+    }).join("");
+    var photoGroups = dates.filter(function(ds){ return store.records[ds].photos && store.records[ds].photos.length; }).map(function(ds){
+      var imgs = store.records[ds].photos.map(function(p){ return '<img src="'+escapeHtml(p.dataUrl||"")+'" alt="'+ds+'" />'; }).join("");
+      return '<div class="pr-group"><div class="pr-group-date">'+formatDateKr(ds)+'</div><div class="pr-photos">'+imgs+'</div></div>';
+    }).join("");
+
+    var html =
+      '<div class="pr-title">논농사 작업 일지</div>' +
+      '<div class="pr-sub">출력일: ' + formatDateKr(todayStr()) + ' · 총 ' + dates.length + '일 기록</div>' +
+      '<div class="pr-farm">' +
+        '<div><span>경작자</span>' + escapeHtml(f.name||"-") + '</div>' +
+        '<div><span>농지 소재지</span>' + escapeHtml(f.location||"-") + '</div>' +
+        '<div><span>면적</span>' + escapeHtml(f.area||"-") + '</div>' +
+        '<div><span>재배 품종</span>' + escapeHtml(f.variety||"-") + '</div>' +
+      '</div>' +
+      '<table class="pr-table"><thead><tr><th style="width:16%">날짜</th><th style="width:16%">작업 내용</th><th style="width:14%">날씨</th><th>메모</th></tr></thead><tbody>' +
+      (rows || '<tr><td colspan="4">기록이 없습니다.</td></tr>') +
+      '</tbody></table>' +
+      (photoGroups ? '<div class="pr-appendix"><h3>사진 기록</h3>' + photoGroups + '</div>' : '');
+
+    document.getElementById("printReport").innerHTML = html;
+  }
+
+  // ---------- init ----------
+  renderFarmLine();
+  renderCalendar();
+})();
+</script>
