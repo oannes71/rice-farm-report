@@ -507,30 +507,94 @@
 
   // ---------- store ----------
   function defaultStore(){ return { farm:{ name:"", location:"", area:"", variety:"" }, records:{}, finance:{ expenses:[], incomes:[] } }; }
-  function loadStore(){
+  function normalizeStore(parsed){
+    if(!parsed || typeof parsed !== "object") return defaultStore();
+    if(!parsed.records) parsed.records = {};
+    if(!parsed.farm) parsed.farm = { name:"", location:"", area:"", variety:"" };
+    if(!parsed.finance) parsed.finance = { expenses:[], incomes:[] };
+    if(!Array.isArray(parsed.finance.expenses)) parsed.finance.expenses = [];
+    if(!Array.isArray(parsed.finance.incomes)) parsed.finance.incomes = [];
+    return parsed;
+  }
+  function readLocalStore(){
     try{
       var raw = localStorage.getItem(STORAGE_KEY);
-      if(!raw) return defaultStore();
-      var parsed = JSON.parse(raw);
-      if(!parsed.records) parsed.records = {};
-      if(!parsed.farm) parsed.farm = { name:"", location:"", area:"", variety:"" };
-      if(!parsed.finance) parsed.finance = { expenses:[], incomes:[] };
-      if(!Array.isArray(parsed.finance.expenses)) parsed.finance.expenses = [];
-      if(!Array.isArray(parsed.finance.incomes)) parsed.finance.incomes = [];
-      return parsed;
-    }catch(e){ return defaultStore(); }
-  }
-  function saveStore(){
-    try{
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(store));
-      return true;
-    }catch(e){
-      showToast("저장 공간이 가득 찼습니다. '내보내기'로 백업한 뒤, 오래된 날짜의 사진을 지우고 다시 시도해주세요.");
-      return false;
-    }
+      return raw ? normalizeStore(JSON.parse(raw)) : null;
+    }catch(e){ return null; }
   }
 
-  var store = loadStore();
+  // Data lives in IndexedDB (hundreds of MB); localStorage (~5MB) is only a fallback / migration source.
+  var IDB_NAME = "riceJournal", IDB_STORE = "kv", IDB_KEY = "store";
+  var idbBroken = false, storeReady = false, writePending = false, saveChain = Promise.resolve();
+  function openDb(){
+    return new Promise(function(resolve, reject){
+      if(!window.indexedDB){ reject(new Error("no indexedDB")); return; }
+      var req = indexedDB.open(IDB_NAME, 1);
+      req.onupgradeneeded = function(){ req.result.createObjectStore(IDB_STORE); };
+      req.onsuccess = function(){ resolve(req.result); };
+      req.onerror = function(){ reject(req.error); };
+    });
+  }
+  function idbGetStore(){
+    return openDb().then(function(db){
+      return new Promise(function(resolve, reject){
+        var req = db.transaction(IDB_STORE).objectStore(IDB_STORE).get(IDB_KEY);
+        req.onsuccess = function(){ resolve(req.result); };
+        req.onerror = function(){ reject(req.error); };
+      });
+    });
+  }
+  function idbPutStore(){
+    return openDb().then(function(db){
+      return new Promise(function(resolve, reject){
+        var tx = db.transaction(IDB_STORE, "readwrite");
+        tx.objectStore(IDB_STORE).put(store, IDB_KEY);
+        tx.oncomplete = function(){ resolve(); };
+        tx.onerror = function(){ reject(tx.error); };
+        tx.onabort = function(){ reject(tx.error); };
+      });
+    });
+  }
+  function loadStoreAsync(){
+    return idbGetStore().then(function(saved){
+      if(saved) return normalizeStore(saved);
+      var legacy = readLocalStore(); // first run on IndexedDB: carry over existing localStorage data
+      var migrated = legacy || defaultStore();
+      store = migrated;
+      return idbPutStore().then(function(){ return migrated; });
+    }).catch(function(){
+      idbBroken = true;
+      return readLocalStore() || defaultStore();
+    });
+  }
+  function onSaveError(){
+    showToast("저장하지 못했습니다. '내보내기'로 백업한 뒤 다시 시도해주세요.");
+  }
+  function saveStore(){
+    if(!storeReady){
+      showToast("데이터를 불러오는 중입니다. 잠시 후 다시 시도해주세요.");
+      return false;
+    }
+    if(idbBroken){
+      try{
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(store));
+        return true;
+      }catch(e){
+        showToast("저장 공간이 가득 찼습니다. '내보내기'로 백업한 뒤, 오래된 날짜의 사진을 지우고 다시 시도해주세요.");
+        return false;
+      }
+    }
+    if(!writePending){
+      writePending = true;
+      saveChain = saveChain.then(function(){
+        writePending = false;
+        return idbPutStore();
+      }).catch(onSaveError);
+    }
+    return true;
+  }
+
+  var store = defaultStore();
   var view = { year: new Date().getFullYear(), month: new Date().getMonth(), tab:"calendar" };
   var drawerState = { date:null, types:[], photos:[] };
 
@@ -602,7 +666,7 @@
   });
 
   // ---------- stats ----------
-  var SAFE_QUOTA_MB = 5; // conservative estimate of typical browser localStorage limit
+  function safeQuotaMB(){ return idbBroken ? 5 : 500; } // localStorage fallback ~5MB; IndexedDB has far more room
   function estimateStoreSizeMB(){
     try{ return JSON.stringify(store).length / (1024*1024); }catch(e){ return 0; }
   }
@@ -615,14 +679,14 @@
     var monthCount = entries.filter(function(d){ return d.slice(0,7) === monthKey; }).length;
     var sizeMB = estimateStoreSizeMB();
     var sizeLabel = sizeMB < 1 ? Math.round(sizeMB*1024)+"KB" : sizeMB.toFixed(1)+"MB";
-    var ratio = sizeMB / SAFE_QUOTA_MB;
+    var ratio = sizeMB / safeQuotaMB();
     var sizeChipClass = "stat-chip" + (ratio > 0.7 ? " warn" : "");
     var el = document.getElementById("statsRow");
     el.innerHTML =
       '<span class="stat-chip"><b>'+yearCount+'</b>'+view.year+'년 방문일</span>' +
       '<span class="stat-chip"><b>'+monthCount+'</b>이번 달 방문일</span>' +
       '<span class="stat-chip"><b>'+entries.length+'</b>전체 기록</span>' +
-      '<span class="'+sizeChipClass+'" title="브라우저 저장 공간은 보통 약 '+SAFE_QUOTA_MB+'MB까지입니다. 한도에 가까워지면 내보내기로 백업해주세요."><b>'+sizeLabel+'</b>사용 용량</span>';
+      '<span class="'+sizeChipClass+'" title="브라우저 저장 공간 기준 약 '+safeQuotaMB()+'MB 이내로 쓰시길 권장합니다. 한도에 가까워지면 내보내기로 백업해주세요."><b>'+sizeLabel+'</b>사용 용량</span>';
   }
 
   // ---------- calendar ----------
@@ -1055,7 +1119,11 @@
   }
 
   // ---------- init ----------
-  renderFarmLine();
-  renderCalendar();
+  loadStoreAsync().then(function(loaded){
+    store = loaded;
+    storeReady = true;
+    renderFarmLine();
+    renderCalendar();
+  });
 })();
 </script>
